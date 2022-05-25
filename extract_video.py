@@ -3,10 +3,13 @@ import cv2 as cv
 import tkinter as tk
 from tkinter import W, ttk, filedialog, messagebox
 
-from cv2 import CAP_PROP_POS_FRAMES
-
 cap = 0
 step = 0
+in_progress = False
+destination_directory = ""
+filename = ""
+start_frame = 0
+end_frame = 0
 
 def nextStep():
     global step
@@ -37,7 +40,6 @@ def openFile():
         return False
 
     #Open the file
-
     cap = cv.VideoCapture(source_path.get())
     if not cap.isOpened():
         messagebox.showerror('Erreur', 'Impossible d\'ouvrir le fichier')
@@ -45,13 +47,7 @@ def openFile():
     
     return True
 
-in_progress = False
-destination_directory = ""
-filename = ""
-start_frame = 0
-end_frame = 0
 def runExtraction():
-    print("Départ de l'extraction")
     global in_progress, destination_directory, filename, start_frame, end_frame, cap
     in_progress = True
 
@@ -84,8 +80,6 @@ def extract():
     if not in_progress:
         return
     
-    #Start to extract
-    # while True:
     ret, frame = cap.read()
     if not ret or cap.get(cv.CAP_PROP_POS_FRAMES) >= end_frame:
         in_progress = False
@@ -93,12 +87,9 @@ def extract():
 
     if in_progress and not cv.imwrite(destination_directory + "/" + filename + "_frame" + str(cap.get(cv.CAP_PROP_POS_FRAMES)).split('.')[0] + ".jpg", frame):
         in_progress = False
-    # print(cap.get(cv.CAP_PROP_POS_FRAMES))
+
     progress_label.set(str(round(cap.get(cv.CAP_PROP_POS_FRAMES) - start_frame)) + "/" + str(round(end_frame - start_frame)))
     progressbar['value'] = round((cap.get(cv.CAP_PROP_POS_FRAMES) - start_frame) / (end_frame - start_frame) * 100)
-    # if cap.get(cv.CAP_PROP_POS_FRAMES) % 10 == 0:
-    #     in_progress = True
-    #     return
 
     if done:
         messagebox.showinfo("Terminé!", "L'extraction est terminée")
