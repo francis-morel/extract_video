@@ -14,7 +14,6 @@ destination_directory = ""
 filename = ""
 start_frame = 0
 end_frame = 0
-thread = 0
 
 
 def nextStep() -> None:
@@ -67,7 +66,7 @@ def openFile() -> bool:
 
 def runExtraction() -> None:
 
-    global in_progress, destination_directory, filename, start_frame, end_frame, cap, thread
+    global in_progress, destination_directory, filename, start_frame, end_frame, cap
     if not cap.isOpened():
         return
     in_progress = True
@@ -95,6 +94,7 @@ def runExtraction() -> None:
     start_frame = cap.get(cv.CAP_PROP_POS_FRAMES)
     end_frame = min(fin * cap.get(cv.CAP_PROP_FPS), cap.get(cv.CAP_PROP_FRAME_COUNT))
     thread = threading.Thread(target=extract)
+    thread.daemon = True
     thread.start()
 
 
@@ -306,15 +306,10 @@ window_step1.grid(padx=10, pady=10)
 
 
 def on_closing():
-    global in_progress, thread, cap
+    global in_progress, cap
 
     if in_progress:
         stopExtraction()
-        return
-
-    # Doing this to avoid getting the thread stuck
-    if thread.is_alive():
-        return
 
     if cap.isOpened():
         cap.release()
