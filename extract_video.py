@@ -3,6 +3,8 @@ from typing import Tuple
 import cv2 as cv
 import tkinter as tk
 from tkinter import W, ttk, filedialog, messagebox
+import ttkbootstrap as ttkb
+from ttkbootstrap.constants import *
 import math
 import threading
 
@@ -197,7 +199,7 @@ def destination_checkbox_clicked():
         file_destination_browse_button.config(state="normal")
 
 
-root = tk.Tk()
+root = ttkb.Window(themename="superhero")
 root.title("Extraction d'images de vidéo")
 default_options = {"padx": 5, "pady": 5}
 window_step1 = ttk.Frame(root)
@@ -211,7 +213,7 @@ source_path = tk.StringVar()
 file_source_input = ttk.Entry(window_step1, textvariable=source_path, width=50).grid(
     row=1, column=0, **default_options
 )
-file_source_browse_button = ttk.Button(
+file_source_browse_button = ttkb.Button(
     window_step1,
     text="Parcourir",
     command=lambda: source_path.set(filedialog.askopenfilename()),
@@ -245,9 +247,9 @@ file_destination_browse_button = ttk.Button(
 )
 file_destination_browse_button.grid(row=4, column=1, **default_options)
 
-next_step_button = ttk.Button(window_step1, text="Suivant", command=nextStep).grid(
-    row=5, columnspan=3, **default_options
-)
+next_step_button = ttk.Button(
+    window_step1, text="Suivant", command=nextStep, bootstyle="PRIMARY"
+).grid(row=5, columnspan=3, **default_options)
 
 # Window 2 components
 ttk.Label(window_step2, text="Nom du fichier:").grid(
@@ -286,20 +288,24 @@ end_time = tk.StringVar()
 end_time_entry = ttk.Entry(window_step2, textvariable=end_time, width=4)
 end_time_entry.grid(row=4, column=1, sticky=W, **default_options)
 
-progressbar = ttk.Progressbar(window_step2, length=250, mode="determinate")
+progressbar = ttk.Progressbar(
+    window_step2, length=250, mode="determinate", bootstyle="SUCCESS-STRIPED"
+)
 progressbar.grid(row=5, columnspan=3, **default_options)
 progress_label = tk.StringVar()
 ttk.Label(window_step2, textvariable=progress_label).grid(row=6, columnspan=3)
 
-previous_step_button = ttk.Button(window_step2, text="Précédent", command=previousStep)
+previous_step_button = ttk.Button(
+    window_step2, text="Précédent", command=previousStep, bootstyle="SECONDARY"
+)
 previous_step_button.grid(row=7, column=0, **default_options)
 start_extraction_button = ttk.Button(
-    window_step2, text="Extraire", command=runExtraction
+    window_step2, text="Extraire", command=runExtraction, bootstyle="SUCCESS"
 )
 start_extraction_button.grid(row=7, column=1, **default_options)
 
 stop_extraction_button = ttk.Button(
-    window_step2, text="Arrêter", command=stopExtraction
+    window_step2, text="Arrêter", command=stopExtraction, bootstyle="DANGER"
 )
 
 window_step1.grid(padx=10, pady=10)
