@@ -311,7 +311,7 @@ def on_closing():
     if in_progress:
         stopExtraction()
 
-    if cap.isOpened():
+    if cap and cap.isOpened():
         cap.release()
     root.destroy()
 
